@@ -18,7 +18,7 @@ class DisplayBook extends Component {
           </div>
         </div>
         <div className="book-title">{this.props.Book.title}</div>
-        {this.props.Book.authors.map(author => <div className="book-authors">{author}</div>)}
+        {this.props.Book.authors && this.props.Book.authors.map(author => <div className="book-authors">{author}</div>)}
       </div>
     )
   }
