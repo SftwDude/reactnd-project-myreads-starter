@@ -5,7 +5,6 @@ import './App.css'
 import BookShelf from './BookShelf'
 import DisplayBook from './DisplayBook'
 import ListSearchBooks from './ListSearchBooks'
-import escapeRegExp from 'escape-string-regexp'
 
 class BooksApp extends React.Component {
   state = {
@@ -33,7 +32,36 @@ class BooksApp extends React.Component {
     this.setState({ query: query.trim() })
   }
 
+  moveBook = (title, action) => {
+    let foundBook, idx
+    if ((idx = this.state.currentlyReadingBooks.findIndex(b => b.title === title)) >= 0) {
+      foundBook = this.state.currentlyReadingBooks[idx]
+      this.setState({ currentlyReadingBooks: this.state.currentlyReadingBooks.filter(b => b.title !== title) })
+    } 
+    else if ((idx = this.state.wantToReadBooks.findIndex(b => b.title === title)) >= 0) {
+      foundBook = this.state.wantToReadBooks[idx]
+      this.setState({ wantToReadBooks: this.state.wantToReadBooks.filter(b => b.title !== title) })
+    }
+    else if ((idx = this.state.readBooks.findIndex(b => b.title === title)) >= 0) {
+      foundBook = this.state.readBooks[idx]
+      this.setState({ readBooks: this.state.readBooks.filter(b => b.title !== title) })
+    }
 
+    if (foundBook) {
+      if (action === "currentlyReading") {
+        this.state.currentlyReadingBooks.push(foundBook)
+        this.setState({ currentlyReadingBooks: this.state.currentlyReadingBooks })
+      }
+      else if (action === "wantToRead") {
+        this.state.wantToReadBooks.push(foundBook)
+        this.setState({ wantToReadBooks: this.state.wantToReadBooks })
+      }
+      else if (action === "read") {
+        this.state.readBooks.push(foundBook)
+        this.setState({ readBooks: this.state.readBooks })
+      }
+    }
+  }
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
@@ -49,7 +77,7 @@ class BooksApp extends React.Component {
 
   render() {
     /*Don't render anything if we haven't retreived any books */
-    if (this.state.books.length == 0) { return (null) }
+    if (this.state.books.length === 0) { return (null) }
     return (
       <div className="app">
         {this.state.showSearchPage ? (
@@ -67,10 +95,10 @@ class BooksApp extends React.Component {
                 */}
                 <input
                   className='search-books'
-                  type="text" placeholder="Search by title or author"
-                  placeholder='Search contacts'
+                  type="text"
+                  placeholder="Search by title or author"
                   value={this.state.query}
-                  onChange={(event) => this.updateQuery(event.target.value)}
+                  onChange={(event) => this.updateQuery(event.target.name, event.target.value)}
                 />
 
               </div>
@@ -78,8 +106,10 @@ class BooksApp extends React.Component {
             <div className="search-books-results">
               <ol className="books-grid">
                 {this.state.searchBooks && this.state.searchBooks.map(book => (
-                  <li>
-                    <DisplayBook Book={book} style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }} />
+                  <li key={book.id}>
+                    <DisplayBook Book={book}
+                      style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
+                      onChange={(event) => this.moveBook(event.target.name, event.target.value)} />
                   </li>
                 ))}
               </ol>
@@ -97,8 +127,10 @@ class BooksApp extends React.Component {
                     <div className="bookshelf-books">
                       <ol className="books-grid">
                         {this.state.currentlyReadingBooks.map(book => (
-                          <li>
-                            <DisplayBook Book={book} style={{ width: 128, height: 193, backgroundImage: 'url(' + book.imageLinks.thumbnail + ')' }} />
+                          <li key={book.id}>
+                            <DisplayBook Book={book}
+                              style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
+                              onChange={(name, value) => this.moveBook(name, value)} />
                           </li>
                         ))}
                       </ol>
@@ -109,8 +141,10 @@ class BooksApp extends React.Component {
                     <div className="bookshelf-books">
                       <ol className="books-grid">
                         {this.state.wantToReadBooks.map(book => (
-                          <li>
-                            <DisplayBook Book={book} style={{ width: 128, height: 193, backgroundImage: 'url(' + book.imageLinks.thumbnail + ')' }} />
+                          <li key={book.id}>
+                            <DisplayBook Book={book}
+                              style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
+                              onChange={(name, value) => this.moveBook(name, value)} />
                           </li>
                         ))}
                       </ol>
@@ -121,8 +155,10 @@ class BooksApp extends React.Component {
                     <div className="bookshelf-books">
                       <ol className="books-grid">
                         {this.state.readBooks.map(book => (
-                          <li>
-                            <DisplayBook Book={book} style={{ width: 128, height: 193, backgroundImage: 'url(' + book.imageLinks.thumbnail + ')' }} />
+                          <li key={book.id}>
+                            <DisplayBook Book={book}
+                              style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
+                              onChange={(name, value) => this.moveBook(name, value)} />
                           </li>
                         ))}
                       </ol>
