@@ -29,7 +29,7 @@ class Book extends Component {
 }
 
 Book.protoTypes = {
-  Book: PropTypes.array.isRequired
+  book: PropTypes.array.isRequired
 }
 
 export default Book

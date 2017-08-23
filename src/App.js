@@ -18,9 +18,7 @@ class BooksApp extends React.Component {
     currentlyReadingBooks: [],
     wantToReadBooks: [],
     readBooks: [],
-    searchBooks: [],
-
-    query: ''
+    searchBooks: []
   }
 
   updateSearchPageFlag = (value) => this.setState({ showSearchPage: value })
@@ -29,7 +27,6 @@ class BooksApp extends React.Component {
     BooksAPI.search(query, 20).then((books) => {
       this.setState({ searchBooks: books })
     })
-    this.setState({ query: query.trim() })
   }
 
   assignBook(book, targetCatagory = "none") {

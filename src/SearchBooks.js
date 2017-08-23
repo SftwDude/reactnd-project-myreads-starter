@@ -36,8 +36,8 @@ class SearchBooks extends Component {
                         {(this.props.searchBooks && this.props.searchBooks.length > 0) && this.props.searchBooks.map(book => (
                             <li key={book.id}>
                                 <Book book={book}
-                                             style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
-                                             onChange={(id, target) => this.moveBook(id, target)} />
+                                    style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
+                                    onChange={(id, target) => this.moveBook(id, target)} />
                             </li>
                         ))}
                     </ol>
