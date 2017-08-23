@@ -25,6 +25,8 @@ class BooksApp extends React.Component {
     query: ''
   }
 
+  updateSearchPageFlag = (value) => this.setState({ showSearchPage: value })
+
   updateQuery = (query) => {
     BooksAPI.search(query, 20).then((books) => {
       this.setState({ searchBooks: books })
@@ -32,33 +34,52 @@ class BooksApp extends React.Component {
     this.setState({ query: query.trim() })
   }
 
-  moveBook = (title, action) => {
-    let foundBook, idx
-    if ((idx = this.state.currentlyReadingBooks.findIndex(b => b.title === title)) >= 0) {
-      foundBook = this.state.currentlyReadingBooks[idx]
-      this.setState({ currentlyReadingBooks: this.state.currentlyReadingBooks.filter(b => b.title !== title) })
-    } 
-    else if ((idx = this.state.wantToReadBooks.findIndex(b => b.title === title)) >= 0) {
-      foundBook = this.state.wantToReadBooks[idx]
-      this.setState({ wantToReadBooks: this.state.wantToReadBooks.filter(b => b.title !== title) })
+  assignBook(book, targetCatagory = "none") {
+    BooksAPI.update(book, targetCatagory)
+    if (targetCatagory === "currentlyReading") {
+      this.state.currentlyReadingBooks.push(book)
+      this.setState({ currentlyReadingBooks: this.state.currentlyReadingBooks })
     }
-    else if ((idx = this.state.readBooks.findIndex(b => b.title === title)) >= 0) {
-      foundBook = this.state.readBooks[idx]
-      this.setState({ readBooks: this.state.readBooks.filter(b => b.title !== title) })
+    else if (targetCatagory === "wantToRead") {
+      this.state.wantToReadBooks.push(book)
+      this.setState({ wantToReadBooks: this.state.wantToReadBooks })
     }
+    else if (targetCatagory === "read") {
+      this.state.readBooks.push(book)
+      this.setState({ readBooks: this.state.readBooks })
+    }
+  }
 
-    if (foundBook) {
-      if (action === "currentlyReading") {
-        this.state.currentlyReadingBooks.push(foundBook)
-        this.setState({ currentlyReadingBooks: this.state.currentlyReadingBooks })
+  moveBook = (id, targetCatagory) => {
+    /* Search for the book in the shelves, if found then remove it from the shelf */
+    /* and assign it to a new shelf.                                              */
+    let idx
+
+    idx = this.state.currentlyReadingBooks.findIndex(b => b.id === id)
+    if (idx >= 0) {
+      this.assignBook(this.state.currentlyReadingBooks[idx], targetCatagory)
+      this.setState({ currentlyReadingBooks: this.state.currentlyReadingBooks.filter(b => b.id !== id) })
+    }
+    else {
+
+      idx = this.state.wantToReadBooks.findIndex(b => b.id === id)
+      if (idx >= 0) {
+        this.assignBook(this.state.wantToReadBooks[idx], targetCatagory)
+        this.setState({ wantToReadBooks: this.state.wantToReadBooks.filter(b => b.id !== id) })
       }
-      else if (action === "wantToRead") {
-        this.state.wantToReadBooks.push(foundBook)
-        this.setState({ wantToReadBooks: this.state.wantToReadBooks })
-      }
-      else if (action === "read") {
-        this.state.readBooks.push(foundBook)
-        this.setState({ readBooks: this.state.readBooks })
+      else {
+
+        idx = this.state.readBooks.findIndex(b => b.id === id)
+        if (idx >= 0) {
+          this.assignBook(this.state.readBooks[idx], targetCatagory)
+          this.setState({ readBooks: this.state.readBooks.filter(b => b.id !== id) })
+        }
+        else {
+
+          if (idx < 0) { //The book is from search and needs to be assinged to a shelf
+            BooksAPI.get(id).then(book => this.assignBook(book, targetCatagory))
+          }
+        }
       }
     }
   }
@@ -82,34 +103,29 @@ class BooksApp extends React.Component {
       <div className="app">
         {this.state.showSearchPage ? (
           <div className="search-books">
-            <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
+            <ListSearchBooks onUpdateQuery={(value) => this.updateQuery(value)}
+              onUpdateSearchPageFlag={(state) => this.updateSearchPageFlag(state)} />
+            {/*             <div className="search-books-bar">
+              <a className="close-search" onClick={() => this.updateSearchPageFlag(false)}>Close</a>
               <div className="search-books-input-wrapper">
-                {/* 
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-                  
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
                 <input
                   className='search-books'
                   type="text"
                   placeholder="Search by title or author"
                   value={this.state.query}
-                  onChange={(event) => this.updateQuery(event.target.name, event.target.value)}
-                />
+                  onChange={(event) => this.updateQuery(event.target.value)}
+                 />
 
               </div>
             </div>
-            <div className="search-books-results">
+ */}            <div className="search-books-results">
               <ol className="books-grid">
-                {this.state.searchBooks && this.state.searchBooks.map(book => (
+                {(this.state.searchBooks && this.state.searchBooks.length > 0) && this.state.searchBooks.map(book => (
                   <li key={book.id}>
                     <DisplayBook Book={book}
+
                       style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
-                      onChange={(event) => this.moveBook(event.target.name, event.target.value)} />
+                      onChange={(name, value) => this.moveBook(name, value)} />
                   </li>
                 ))}
               </ol>
@@ -167,7 +183,7 @@ class BooksApp extends React.Component {
                 </div>
               </div>
               <div className="open-search">
-                <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
+                <a onClick={() => this.updateSearchPageFlag(true)}>Add a book</a>
               </div>
             </div>
           )}

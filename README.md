@@ -41,7 +41,7 @@ To simplify your development process, we've provided a backend server for you to
 
 ### `update(book, shelf)`
 * book: `<Object>` containing at minimum an `id` attribute
-* shelf: `<String>` contains one of ["wantToRead", "currentlyReading", "read"]  
+* shelf: `<String>` contains one of ["", "currentlyReading", "read"]  
 * Returns a Promise which resolves to a JSON object containing the response data of the POST request
 
 ### `search(query, maxResults)`
