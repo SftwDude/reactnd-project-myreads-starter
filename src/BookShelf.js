@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import DisplayBook from './DisplayBook'
+import Book from './Book'
 
 class BookShelf extends Component {
     moveBook = (id, target) => { this.props.onMoveBook(id, target) }
@@ -12,7 +12,7 @@ class BookShelf extends Component {
                     <ol className="books-grid">
                         {this.props.books.map(book => (
                             <li key={book.id}>
-                                <DisplayBook Book={book}
+                                <Book Book={book}
                                     style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
                                     onChange={(name, value) => this.moveBook(name, value)} />
                             </li>

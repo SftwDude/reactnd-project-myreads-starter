@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import DisplayBook from './DisplayBook'
+import Book from './Book'
 import PropTypes from 'prop-types'
 
-class ListSearchBooks extends Component {
+class SearchBooks extends Component {
     state = {
         query: ''
     }
@@ -35,7 +35,7 @@ class ListSearchBooks extends Component {
                     <ol className="books-grid">
                         {(this.props.searchBooks && this.props.searchBooks.length > 0) && this.props.searchBooks.map(book => (
                             <li key={book.id}>
-                                <DisplayBook Book={book}
+                                <Book Book={book}
                                              style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
                                              onChange={(id, target) => this.moveBook(id, target)} />
                             </li>
@@ -47,7 +47,7 @@ class ListSearchBooks extends Component {
     }
 }
 
-ListSearchBooks.protoTypes = {
+SearchBooks.protoTypes = {
 }
 
-export default ListSearchBooks
+export default SearchBooks

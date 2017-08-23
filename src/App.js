@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import BookShelf from './BookShelf'
-import DisplayBook from './DisplayBook'
-import ListSearchBooks from './ListSearchBooks'
+import SearchBooks from './SearchBooks'
 
 class BooksApp extends React.Component {
   state = {
@@ -16,7 +15,6 @@ class BooksApp extends React.Component {
      */
     showSearchPage: false,
 
-    books: [],
     currentlyReadingBooks: [],
     wantToReadBooks: [],
     readBooks: [],
@@ -87,7 +85,6 @@ class BooksApp extends React.Component {
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState({
-        books: books,
         currentlyReadingBooks: books.filter(b => b.shelf === "currentlyReading"),
         wantToReadBooks: books.filter(b => b.shelf === "wantToRead"),
         readBooks: books.filter(b => b.shelf === "read")
@@ -97,12 +94,11 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    if (this.state.books.length === 0) { return (null) } //Don't render anything if we haven't retreived any books
     return (
       <div className="app">
         {this.state.showSearchPage ? (
           <div className="search-books">
-            <ListSearchBooks searchBooks={this.state.searchBooks}
+            <SearchBooks searchBooks={this.state.searchBooks}
               onUpdateQuery={(query) => this.updateQuery(query)}
               onUpdateSearchPageFlag={(state) => this.updateSearchPageFlag(state)}
               onMoveBook={(id, target) => this.moveBook(id, target)} />

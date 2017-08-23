@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-class DisplayBook extends Component {
+class Book extends Component {
   state = { book: {}, status: "none" }
 
   onBookChange = (event) => {
@@ -30,8 +30,8 @@ class DisplayBook extends Component {
   }
 }
 
-DisplayBook.protoTypes = {
+Book.protoTypes = {
   Book: PropTypes.object.isRequired
 }
 
-export default DisplayBook
+export default Book
