@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 class Book extends Component {
-  state = { book: {}, status: "none" }
-
   onBookChange = (event) => {
     this.props.onChange(event.target.name, event.target.value)
   }
@@ -14,7 +12,7 @@ class Book extends Component {
         <div className="book-top">
           <div className="book-cover" style={this.props.style}></div>
           <div className="book-shelf-changer">
-            <select name={this.props.Book.id} onChange={this.onBookChange}>
+            <select name={this.props.book.id} onChange={this.onBookChange}>
               <option value="none" >Move to...</option>
               <option value={"wantToRead"}>Want to Read</option>
               <option value={"currentlyReading"}>Currently Reading</option>
@@ -23,15 +21,15 @@ class Book extends Component {
             </select>
           </div>
         </div>
-        <div className="book-title">{this.props.Book.title}</div>
-        {this.props.Book.authors && this.props.Book.authors.map(author => <div key={author} className="book-authors">{author}</div>)}
+        <div className="book-title">{this.props.book.title}</div>
+        {this.props.book.authors && this.props.book.authors.map(author => <div key={author} className="book-authors">{author}</div>)}
       </div>
     )
   }
 }
 
 Book.protoTypes = {
-  Book: PropTypes.object.isRequired
+  Book: PropTypes.array.isRequired
 }
 
 export default Book
