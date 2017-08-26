@@ -119,7 +119,7 @@ class BooksApp extends React.Component {
                 </div>
               </div>
               <div className="open-search">
-                <a onClick={() => this.updateSearchPageFlag(true)}>Add a book</a>
+                <Link to="/Search" onClick={() => this.updateSearchPageFlag(true)}>Add a book</Link>
               </div>
             </div>
           )}

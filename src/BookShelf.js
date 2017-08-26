@@ -13,7 +13,9 @@ class BookShelf extends Component {
                         {this.props.books.map(book => (
                             <li key={book.id}>
                                 <Book book={book}
-                                    style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
+/*                                    style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
+*/
+style={{ width: 128, height: 193, backgroundImage: 'url(' + book.imageLinks.thumbnail + ')' }}
                                     onChange={(name, value) => this.moveBook(name, value)} />
                             </li>
                         ))}
