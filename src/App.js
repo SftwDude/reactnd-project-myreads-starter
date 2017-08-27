@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import BookShelf from './BookShelf'
@@ -7,23 +8,13 @@ import SearchBooks from './SearchBooks'
 
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false,
-
     currentlyReadingBooks: [],
     wantToReadBooks: [],
     readBooks: [],
     searchBooks: []
   }
 
-  updateSearchPageFlag = (value) => this.setState({ showSearchPage: value })
-
-  updateQuery = (query) => {
+  updateSearchBooks = (query) => {
     BooksAPI.search(query, 20).then((books) => {
       this.setState({ searchBooks: books })
     })
@@ -93,36 +84,36 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
-          <div className="search-books">
-            <SearchBooks searchBooks={this.state.searchBooks}
-              onUpdateQuery={(query) => this.updateQuery(query)}
-              onUpdateSearchPageFlag={(state) => this.updateSearchPageFlag(state)}
-              onMoveBook={(id, target) => this.moveBook(id, target)} />
-          </div>
-        ) : (
-            <div className="list-books">
-              <div className="list-books-title">
-                <h1>MyReads</h1>
-              </div>
-              <div className="list-books-content">
-                <div>
-                  <BookShelf title={"Currently Reading"}
-                    books={this.state.currentlyReadingBooks}
-                    onMoveBook={(id, target) => this.moveBook(id, target)} />
-                  <BookShelf title={"Want to Read"}
-                    books={this.state.wantToReadBooks}
-                    onMoveBook={(id, target) => this.moveBook(id, target)} />
-                  <BookShelf title={"Read"}
-                    books={this.state.readBooks}
-                    onMoveBook={(id, target) => this.moveBook(id, target)} />
-                </div>
-              </div>
-              <div className="open-search">
-                <Link to="/Search" onClick={() => this.updateSearchPageFlag(true)}>Add a book</Link>
+        <Route path="/search" render={() => (
+          <SearchBooks searchBooks={this.state.searchBooks}
+            onUpdateQuery={(query) => this.updateSearchBooks(query)}
+            onUpdateSearchPageFlag={(state) => this.updateSearchPageFlag(state)}
+            onMoveBook={(id, target) => this.moveBook(id, target)} />
+
+        )} />
+        <Route exact path="/" render={() => (
+          <div className="list-books">
+            <div className="list-books-title">
+              <h1>MyReads</h1>
+            </div>
+            <div className="list-books-content">
+              <div>
+                <BookShelf title={"Currently Reading"}
+                  books={this.state.currentlyReadingBooks}
+                  onMoveBook={(id, target) => this.moveBook(id, target)} />
+                <BookShelf title={"Want to Read"}
+                  books={this.state.wantToReadBooks}
+                  onMoveBook={(id, target) => this.moveBook(id, target)} />
+                <BookShelf title={"Read"}
+                  books={this.state.readBooks}
+                  onMoveBook={(id, target) => this.moveBook(id, target)} />
               </div>
             </div>
-          )}
+            <div className="open-search">
+              <Link to="/Search" >Add a book</Link>
+            </div>
+          </div>
+        )} />
       </div>
     )
   }
