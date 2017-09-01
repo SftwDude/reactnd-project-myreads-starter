@@ -160,6 +160,14 @@ body, .app {
   opacity: 0;
   cursor: pointer;
 }
+.book-shelf-option {
+  width: 2%;
+  height: 2%;
+  background-image: url('./icons/checkmark.svg');
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 5px;
+}
 
 /* book cover */
 

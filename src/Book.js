@@ -14,9 +14,9 @@ class Book extends Component {
           <div className="book-shelf-changer">
             <select name={this.props.book.id} onChange={this.onBookChange}>
               <option value="none" >Move to...</option>
-              <option value={"wantToRead"}>Want to Read</option>
-              <option value={"currentlyReading"}>Currently Reading</option>
-              <option value={"read"}>Read</option>
+              <option value={"wantToRead"} selected={"wantToRead" === this.props.shelf}>Want to Read</option>
+              <option value={"currentlyReading"} selected={"currentlyReading" === this.props.shelf}>Currently Reading</option>
+              <option value={"read"} selected={"read" === this.props.shelf}>Read</option>
               <option value={"none"}>None</option>
             </select>
           </div>

@@ -16,6 +16,7 @@ class SearchBooks extends Component {
     moveBook = (id, target) => { this.props.onMoveBook(id, target) }
 
     render() {
+        let shelf
         return (
             <div className="search-books">
 
@@ -35,10 +36,12 @@ class SearchBooks extends Component {
                     <div className="search-books-results">
                         <ol className="books-grid">
                             {(this.props.searchBooks && this.props.searchBooks.length > 0) && this.props.searchBooks.map(book => (
+                                
                                 <li key={book.id}>
                                     <Book book={book}
-                                        style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? 'url(' + book.imageLinks.thumbnail + ')' : '' }}
-                                        onChange={(id, target) => this.moveBook(id, target)} />
+                                          shelf={this.props.searchBookShelfs(book)}
+                                          style={{ width: 128, height: 193, backgroundImage: book.hasOwnProperty("imageLinks") ? `url(${book.imageLinks.thumbnail})` : '' }}
+                                          onChange={(id, target) => this.moveBook(id, target)} />
                                 </li>
                             ))}
                         </ol>

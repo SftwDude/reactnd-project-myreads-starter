@@ -20,6 +20,23 @@ class BooksApp extends React.Component {
     })
   }
 
+  searchBookShelfs(book) {
+    let idx = this.state.currentlyReadingBooks.findIndex(b => b.id === book.id)
+    if (idx >= 0) {
+      return ("currentlyReading")
+    }
+    idx = this.state.wantToReadBooks.findIndex(b => b.id === book.id)
+    if (idx >= 0) {
+      return ("wantToRead")
+    }
+    idx = this.state.readBooks.findIndex(b => b.id === book.id)
+    if (idx >= 0) {
+      return ("read")
+    }
+
+    return("none")
+  }
+
   assignBook(book, targetCatagory = "none") {
     BooksAPI.update(book, targetCatagory)
     if (targetCatagory === "currentlyReading") {
@@ -88,7 +105,8 @@ class BooksApp extends React.Component {
           <SearchBooks searchBooks={this.state.searchBooks}
             onUpdateQuery={(query) => this.updateSearchBooks(query)}
             onUpdateSearchPageFlag={(state) => this.updateSearchPageFlag(state)}
-            onMoveBook={(id, target) => this.moveBook(id, target)} />
+            onMoveBook={(id, target) => this.moveBook(id, target)}
+            searchBookShelfs={(book) => this.searchBookShelfs(book)} />
 
         )} />
 
